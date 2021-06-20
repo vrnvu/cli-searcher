@@ -1,11 +1,18 @@
 # cli-searcher
 
-## What are we doing
+You will find a lot of comments explaining the reasoning behind the implementation.
 
-- Line driven text search engine
-- fzf + similarity text ranking
+## Run
 
-## Example
+With maven support, compile then run
+
+```shell
+mvn compile
+mvn exec:java -Dexec.mainClass=searcher.Searcher -Dexec.args="filesystem"
+mvn test -Dtest=searcher.TestSuite
+```
+
+## Objective
 
 We open up a tree pointing to the specified directory / path.
 
@@ -52,13 +59,3 @@ Ranker> :quit
 2. Read input from user, text_search to base similarity upon
 3. Vectorize, apply word embedding for each document
 4. Apply similarity algorithm
-
-## Run
-
-With maven support, compile then run
-
-```shell
-mvn compile
-mvn exec:java -Dexec.mainClass=searcher.Searcher -Dexec.args="filesystem"
-mvn test -Dtest=searcher.TestSuite
-```
