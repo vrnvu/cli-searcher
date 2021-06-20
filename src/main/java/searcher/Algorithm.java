@@ -46,10 +46,13 @@ public class Algorithm {
 
     /**
      * Main algorithm execution loop
+     * https://towardsdatascience.com/the-best-document-similarity-algorithm-in-2020-a-beginners-guide-a01b9ef8cf05
+     * I kept it similar to Jaccard's algorithm, set intersections and unions, conceptually easy to follow as first version
+     * https://github.com/massanishi/document_similarity_algorithms_experiments/blob/master/jaccard/process_jaccard_similarity.py
      *
-     * @param userInput
-     * @param fileInput
-     * @return
+     * @param userInput to this algorithm
+     * @param fileInput to this algorithm
+     * @return a Result data struct containing the fileName and its score
      */
     public static Result rankSimilarity(Algorithm.Input userInput, Algorithm.Input fileInput) {
         String textInputByUser = userInput.document;
@@ -59,20 +62,24 @@ public class Algorithm {
         Set<String> setByUser = new HashSet<>(Arrays.asList(textInputByUser.split(" ")));
         Set<String> setByDocument = new HashSet<>(Arrays.asList(textDocumentToEvaluate.split(" ")));
 
-        setByDocument.retainAll(setByUser);
-        int score = setByUser.size() - setByDocument.size();
+        Set<String> union = new HashSet<>();
+        union.addAll(setByDocument);
+        union.addAll(setByUser);
 
-        System.out.println(setByUser);
-        System.out.println(setByDocument);
-        return new Result(fileInput.fileName, score);
+        // intersection stored in setByDocument reference
+        setByDocument.retainAll(setByUser);
+        int score = (setByDocument.size() * 100) / union.size();
+
+        return new Result(fileInput.fileName, (int) score);
     }
 
     /**
      * Depending on the algorithm we need to apply a normalization
-     * Probably for algorithms similar to TF-IDF a vectorization
+     * For algorithms similar to TF-IDF a vectorization
+     * Also ML algorithms will expect a full document as an input, we won't be able to process them in chunks
      *
-     * @param rawInput
-     * @return
+     * @param rawInput original string to normalize
+     * @return normalized document according to some rules, this rules can be algorithm depedent
      */
     public static String normalizeText(String rawInput) {
         String alphaText = rawInput.replaceAll("[^a-zA-Z0-9]", " ");
